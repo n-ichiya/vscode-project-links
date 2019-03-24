@@ -2,7 +2,7 @@
     "name": "vscode-project-links",
     "displayName": "Project Links",
     "description": "A dead-simple extension to make project:// links work how you would expect",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "publisher": "KyleDavidE",
     "engines": {
         "vscode": "^1.23.0"
