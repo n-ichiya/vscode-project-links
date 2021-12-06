@@ -21,7 +21,9 @@ import { join } from 'path';
 const MAX_LENGTH = 100000
 
 const regex = /project:\/\/([^\s]+)/
+const relRegex = /rel:\/\/([^\s]+)/
 const regexGlobal = new RegExp(regex, regex.flags + 'g')
+const relRegexGlobal = new RegExp(relRegex, relRegex.flags + 'g')
 
 type TargetedDocumentLink = DocumentLink & { target: Uri }
 
@@ -61,6 +63,29 @@ class LinkProvider implements DocumentLinkProvider {
       let match = regexGlobal.exec(str);
       match;
       match = regexGlobal.exec(str)
+    ) {
+      try {
+        const url = Uri.parse(match[0].replace(/\/\//, '///'))
+        links.push({
+          range: new Range(
+            document.positionAt(match.index),
+            document.positionAt(match.index + match[0].length)
+          ),
+          target: workspaceFolder.uri.with({
+            path: workspaceFolder.uri.path + url.path,
+            query: url.query,
+            fragment: url.fragment
+          })
+        })
+      } catch (e) {
+        //link is somehow invalid
+      }
+    }
+    // rel
+    for (
+      let match = relRegexGlobal.exec(str);
+      match;
+      match = relRegexGlobal.exec(str)
     ) {
       try {
         const url = Uri.parse(match[0].replace(/\/\//, '///'))
